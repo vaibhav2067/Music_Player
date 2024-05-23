@@ -15,63 +15,51 @@ class MusicPlayer:
         self.playing = False
         self.playlist = []
 
-        # Make the Tkinter window translucent
-        master.attributes("-alpha", 1)
-
         # Create a canvas with no background
-        self.canvas = Canvas(master, width=750, height=600, bd=0, highlightthickness=0)
+        self.canvas = Canvas(master, width=700, height=600, bd=0, highlightthickness=0, background="black") ##ADD8E6
         self.canvas.pack()
 
         # Create GUI elements
         self.album_art_label = Label(self.canvas)
-        self.album_art_label_window = self.canvas.create_window(375, 275, anchor="center", window=self.album_art_label)
+        self.album_art_label_window = self.canvas.create_window(350, 275, anchor="center", window=self.album_art_label)
 
         style = ttk.Style()
         style.configure("TButton", padding=10, font=("Helvetica", 10))
 
         self.select_button = ttk.Button(self.canvas, text="Select Track", command=self.select_track)
-        self.select_button_window = self.canvas.create_window(375, 120, anchor="center", window=self.select_button)
+        self.select_button_window = self.canvas.create_window(350, 120, anchor="center", window=self.select_button)
 
         self.play_button = ttk.Button(self.canvas, text="Play", command=self.toggle_play)
-        self.play_button_window = self.canvas.create_window(200, 200, anchor="center", window=self.play_button)
+        self.play_button_window = self.canvas.create_window(350, 200, anchor="center", window=self.play_button)
 
         self.next_button = ttk.Button(self.canvas, text="Next", command=self.play_next)
-        self.next_button_window = self.canvas.create_window(375, 200, anchor="center", window=self.next_button)
+        self.next_button_window = self.canvas.create_window(525, 200, anchor="center", window=self.next_button)
 
-        self.prev_button = ttk.Button(self.canvas, text="Previous", command=self.play_previous)
-        self.prev_button_window = self.canvas.create_window(550, 200, anchor="center", window=self.prev_button)
+        self.prev_button = ttk.Button(self.canvas, text="Previous", command=self.play_previous,)
+        self.prev_button_window = self.canvas.create_window(175, 200, anchor="center", window=self.prev_button)
 
         self.song_library_label = ttk.Label(self.canvas, text="Song Library", font=("Helvetica", 12))
-        self.song_library_label_window = self.canvas.create_window(375, 300, anchor="center", window=self.song_library_label)
+        self.song_library_label_window = self.canvas.create_window(375, 380, anchor="center", window=self.song_library_label)
 
         # Make the song library box translucent
-        self.song_listbox = Listbox(self.canvas, selectmode="SINGLE", font=("Helvetica", 10), bd=0, highlightthickness=0)
-        self.song_listbox_window = self.canvas.create_window(375, 400, anchor="center", window=self.song_listbox)
-
-        self.scrollbar = Scrollbar(self.canvas, orient="vertical")
-        self.scrollbar.config(command=self.song_listbox.yview)
-        self.scrollbar_window = self.canvas.create_window(570, 400, anchor="center", window=self.scrollbar)
-
-        self.song_listbox.config(yscrollcommand=self.scrollbar.set)
+        self.song_listbox = Listbox(self.canvas, selectmode="SINGLE", font=("Helvetica", 10), bd=0, highlightthickness=0, width=60)
+        self.song_listbox_window = self.canvas.create_window(350, 420, anchor="center", window=self.song_listbox)
 
         # Example songs for the song library
         self.populate_song_library()
-
         self.song_listbox.bind("<Double-Button-1>", self.load_selected_song)
 
         # Progress bar
-        style.configure("TProgressbar",
-                        thickness=20, troughcolor="gray", background="light blue", troughrelief="flat", borderwidth=0)
-        self.progress_bar = ttk.Progressbar(self.canvas, orient="horizontal", length=600, mode="determinate",
-                                            style="TProgressbar")
-        self.progress_bar_window = self.canvas.create_window(375, 500, anchor="center", window=self.progress_bar)
+        style.configure("TProgressbar",thickness=20, troughcolor="gray", background="light blue", troughrelief="flat", borderwidth=0)
+        self.progress_bar = ttk.Progressbar(self.canvas, orient="horizontal", length=600, mode="determinate",style="TProgressbar")
+        self.progress_bar_window = self.canvas.create_window(350, 300, anchor="center", window=self.progress_bar)
 
         # Labels for current and total time
         self.current_time_label = ttk.Label(self.canvas, text="0:00", font=("Helvetica", 10))
-        self.current_time_label_window = self.canvas.create_window(275, 500, anchor="center", window=self.current_time_label)
+        self.current_time_label_window = self.canvas.create_window(75, 322, anchor="center", window=self.current_time_label)
 
         self.total_time_label = ttk.Label(self.canvas, text="0:00", font=("Helvetica", 10))
-        self.total_time_label_window = self.canvas.create_window(475, 500, anchor="center", window=self.total_time_label)
+        self.total_time_label_window = self.canvas.create_window(625, 322, anchor="center", window=self.total_time_label)
 
         # Make the progress bar interactive
         self.progress_bar.bind("<Button-1>", self.change_song_position)
@@ -160,15 +148,11 @@ class MusicPlayer:
         # Convert the image data to a Tkinter PhotoImage
         image = Image.open(io.BytesIO(image_data))
         thumbnail = image.copy()
-        thumbnail.thumbnail((750, 550))  # Resize to match the canvas size
-
-        # Apply a blur effect to the thumbnail
-        thumbnail = thumbnail.filter(ImageFilter.BLUR)
-
+        thumbnail.thumbnail((750, 550)) 
         album_art_photo = ImageTk.PhotoImage(thumbnail)
 
         # Set the thumbnail as the background
-        self.canvas.create_image(375, 275, anchor="center", image=album_art_photo)
+        self.canvas.create_image(350, 275, anchor="center", image=album_art_photo)
 
         # Update the album art label
         self.album_art_label.configure(image=album_art_photo)
